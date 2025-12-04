@@ -1,13 +1,13 @@
-import { useRef } from "react";
+import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useGetProductsQuery } from "../redux/api/productApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Header from "../components/Header";
 
+// Small product card component
 const SmallProductCard = ({ product }) => (
   <div className="w-[160px] sm:w-[200px] md:w-[220px] flex-shrink-0 bg-white rounded-xl shadow-lg p-4 sm:p-5 flex flex-col gap-3 transition-transform duration-300 hover:scale-[1.05] hover:shadow-2xl cursor-pointer">
-    {/* Image Container */}
     <div className="w-full h-32 sm:h-36 md:h-40 flex items-center justify-center overflow-hidden bg-gray-50 rounded-lg">
       <img
         src={product.image}
@@ -15,20 +15,15 @@ const SmallProductCard = ({ product }) => (
         className="max-h-full max-w-full object-contain"
       />
     </div>
-
-    {/* Product Details */}
     <h2 className="text-sm sm:text-base font-semibold text-[#285570] mt-1">
       {product.name}
     </h2>
-
     <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
       {product.description}
     </p>
-
     <p className="text-sm sm:text-base font-bold text-[#EFAF76]">
       ${product.price.toFixed(2)}
     </p>
-
     <Link
       to={`/product/${product._id}`}
       className="mt-auto text-xs sm:text-sm text-[#3CBEAC] font-semibold hover:underline"
@@ -41,17 +36,32 @@ const SmallProductCard = ({ product }) => (
 const Home = () => {
   const { keyword = "" } = useParams();
   const { data, isLoading, isError } = useGetProductsQuery({ keyword });
-  const sliderRef = useRef(null);
 
-  // Filter products for recommendations
-  const recommendedProducts =
-    data?.products
-      ?.filter(
+  React.useEffect(() => {
+    console.log("Keyword:", keyword);
+    console.log("API response data:", data);
+  }, [keyword, data]);
+
+  // Determine actual product list based on API response shape
+  const productsList = React.useMemo(() => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    return data.products || [];
+  }, [data]);
+
+  // Filter recommended products (content-based filtering fallback)
+  const recommendedProducts = React.useMemo(() => {
+    if (productsList.length === 0) return [];
+    if (!keyword || keyword.trim() === "") return productsList.slice(0, 10);
+
+    return productsList
+      .filter(
         (p) =>
           p.name.toLowerCase().includes(keyword.toLowerCase()) ||
           p.description.toLowerCase().includes(keyword.toLowerCase())
       )
-      .slice(0, 10) || [];
+      .slice(0, 10);
+  }, [productsList, keyword]);
 
   return (
     <>
@@ -80,7 +90,7 @@ const Home = () => {
 
           {/* Product Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 pb-10">
-            {data?.products?.map((product) => (
+            {productsList.map((product) => (
               <SmallProductCard key={product._id} product={product} />
             ))}
           </div>
@@ -90,14 +100,7 @@ const Home = () => {
             <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-[#285570]">
               Recommended for "{keyword ? keyword : "You"}"
             </h2>
-            <div
-              ref={sliderRef}
-              className="flex overflow-x-auto gap-4 sm:gap-6 pb-4 no-scrollbar scroll-smooth"
-              tabIndex={0}
-              role="list"
-              aria-label="Recommended products"
-              style={{ scrollbarWidth: "none" }}
-            >
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
               {recommendedProducts.length === 0 ? (
                 <p className="text-[#285570] text-sm sm:text-base">
                   No recommendations found for your search.
@@ -116,4 +119,3 @@ const Home = () => {
 };
 
 export default Home;
-

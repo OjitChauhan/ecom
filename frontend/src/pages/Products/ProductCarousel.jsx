@@ -13,12 +13,12 @@ const ProductCarousel = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 300, // Fast animation speed (300ms)
+    speed: 300, // Fast animation speed
     slidesToShow: 3,
     slidesToScroll: 1,
     arrows: true,
     autoplay: true,
-    autoplaySpeed: 2500, // Faster autoplay speed
+    autoplaySpeed: 2500,
     centerMode: true,
     centerPadding: "0px",
     responsive: [
@@ -44,9 +44,14 @@ const ProductCarousel = () => {
   return (
     <div className="w-full bg-[#E3DED7] py-8 min-h-[500px] flex items-center justify-center px-2 sm:px-4">
       {isLoading ? null : error ? (
-        <Message variant="danger">{error?.data?.message || error.error}</Message>
+        <Message variant="danger">
+          {error?.data?.message || error.error}
+        </Message>
       ) : (
-        <Slider {...settings} className="product-carousel-3d w-full max-w-[1100px] mx-auto">
+        <Slider
+          {...settings}
+          className="product-carousel-3d w-full max-w-[1100px] mx-auto"
+        >
           {products.map((product) => (
             <div key={product._id} className="px-2 sm:px-4">
               <div className="carousel-card-3d bg-white rounded-2xl shadow-2xl border border-[#3CBEAC] p-4 sm:p-6 flex flex-col items-center relative w-full min-h-[410px] hover:scale-105 duration-200">
@@ -55,12 +60,12 @@ const ProductCarousel = () => {
                   <FaHeart className="text-[#EFAF76] text-xl sm:text-2xl" />
                 </div>
 
-                {/* Product Image */}
+                {/* Product Image (Full view) */}
                 <div className="w-full flex justify-center">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="rounded-xl w-full h-[230px] sm:h-[230px] object-cover object-center mb-4 shadow"
+                    className="rounded-xl w-full h-[230px] sm:h-[230px] object-contain object-center mb-4 shadow"
                   />
                 </div>
 
@@ -69,12 +74,9 @@ const ProductCarousel = () => {
                   {product.name}
                 </h2>
 
-                {/* Price */}
+                {/* Price (INR) */}
                 <div className="text-base sm:text-lg font-semibold text-[#EFAF76] mb-2 text-center">
-                  {product.price?.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  })}
+                  ₹{product.price?.toLocaleString("en-IN")}
                 </div>
 
                 {/* Brand & Rating */}

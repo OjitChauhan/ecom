@@ -73,7 +73,7 @@ const Favorites = () => {
                     {product.name}
                   </h3>
                   <p className="text-[#3CBEAC] font-bold">
-                    ${product.price?.toFixed(2)}
+                    Rs.{product.price?.toFixed(2)}
                   </p>
                 </div>
 

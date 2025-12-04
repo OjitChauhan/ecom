@@ -1,3 +1,4 @@
+// ProductCard.tsx
 import { Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useDispatch } from "react-redux";
@@ -47,11 +48,9 @@ const ProductCard = ({ p }) => {
           </h5>
         </Link>
 
+        {/* ✅ Price in Indian Rupees */}
         <div className="text-xl font-semibold text-[#285570]">
-          {p?.price?.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-          })}
+          ₹{p?.price?.toLocaleString("en-IN")}
         </div>
 
         <p className="text-[#333333] text-sm leading-relaxed line-clamp-2">

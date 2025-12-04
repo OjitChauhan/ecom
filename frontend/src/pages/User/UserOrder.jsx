@@ -53,7 +53,7 @@ const UserOrder = () => {
                     {order.createdAt.substring(0, 10)}
                   </td>
                   <td className="p-3 font-semibold text-xs sm:text-sm">
-                    ${order.totalPrice.toFixed(2)}
+                    Rs. {order.totalPrice.toFixed(2)}
                   </td>
 
                   <td className="p-3">

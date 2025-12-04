@@ -93,7 +93,7 @@ const Products = () => {
                 {product.description}
               </p>
               <span className="text-4xl font-black text-[#3CBEAC] mb-2 block">
-                ${product.price}
+                Rs. {product.price}
               </span>
               {/* Meta Info */}
               <div className="flex items-center justify-between w-full mb-4">
